@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Снег · Key</title>
+  <title>Snow · Key</title>
   <style>
     * {
       margin: 0;
@@ -21,7 +21,6 @@
       padding: 1rem;
     }
 
-    /* Карточка — белая обводка */
     .card {
       position: relative;
       z-index: 10;
@@ -35,10 +34,8 @@
       border-radius: 32px;
       box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
       text-align: center;
-      transition: all 0.2s ease;
     }
 
-    /* Текстовое поле — нередактируемое, содержит только ключ */
     .card .key-field {
       width: 100%;
       padding: 0.75rem 0.9rem;
@@ -54,11 +51,9 @@
       user-select: none;
       cursor: default;
       backdrop-filter: blur(2px);
-      transition: border-color 0.2s;
       pointer-events: none;
     }
 
-    /* Срок действия — под полем */
     .card .sub {
       display: block;
       font-size: 1rem;
@@ -71,7 +66,6 @@
       text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
     }
 
-    /* Контейнер для ключа */
     .card .key-line {
       display: flex;
       flex-direction: column;
@@ -80,7 +74,6 @@
       width: 100%;
     }
 
-    /* Снежный холст */
     #snow-canvas {
       position: fixed;
       top: 0;
@@ -92,7 +85,6 @@
       z-index: 1;
     }
 
-    /* Адаптив */
     @media (max-width: 480px) {
       .card {
         max-width: 340px;
@@ -108,7 +100,6 @@
       }
     }
 
-    /* Виньетка */
     .vignette {
       position: fixed;
       top: 0;
@@ -127,9 +118,6 @@
 
   <div class="card">
     <div class="key-line">
-      <!-- Верхняя надпись УДАЛЕНА -->
-      
-      <!-- Нередактируемое текстовое поле с ключом -->
       <input 
         type="text" 
         class="key-field" 
@@ -139,9 +127,7 @@
         autocomplete="off"
         spellcheck="false"
       >
-      
-      <!-- Срок действия -->
-      <span class="sub">Key expires — Lifetime</span>
+      <span class="sub">Key expires - Lifetime</span>
     </div>
   </div>
 
