@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Снег · Key</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #0b0b0b;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+      padding: 1rem;
+    }
+
+    /* Карточка — белая обводка */
+    .card {
+      position: relative;
+      z-index: 10;
+      max-width: 420px;
+      width: 100%;
+      padding: 1.8rem 1.5rem;
+      background: rgba(10, 10, 10, 0.65);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      border: 2px solid #ffffff;
+      border-radius: 32px;
+      box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    /* Текстовое поле — нередактируемое, содержит только ключ */
+    .card .key-field {
+      width: 100%;
+      padding: 0.75rem 0.9rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 18px;
+      color: #e8e8e8;
+      font-size: 1.1rem;
+      font-family: 'Inter', 'Segoe UI', monospace;
+      letter-spacing: 0.04em;
+      text-align: center;
+      outline: none;
+      user-select: none;
+      cursor: default;
+      backdrop-filter: blur(2px);
+      transition: border-color 0.2s;
+      pointer-events: none;
+    }
+
+    /* Срок действия — под полем */
+    .card .sub {
+      display: block;
+      font-size: 1rem;
+      font-weight: 340;
+      color: #d0d0d0;
+      letter-spacing: 0.03em;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 0.7rem;
+      margin-top: 0.7rem;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Контейнер для ключа */
+    .card .key-line {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
+      width: 100%;
+    }
+
+    /* Снежный холст */
+    #snow-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: block;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Адаптив */
+    @media (max-width: 480px) {
+      .card {
+        max-width: 340px;
+        padding: 1.5rem 1rem;
+        border-radius: 28px;
+      }
+      .card .key-field {
+        font-size: 0.85rem;
+        padding: 0.55rem 0.7rem;
+      }
+      .card .sub {
+        font-size: 0.85rem;
+      }
+    }
+
+    /* Виньетка */
+    .vignette {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.25) 100%);
+      pointer-events: none;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="snow-canvas"></canvas>
+  <div class="vignette"></div>
+
+  <div class="card">
+    <div class="key-line">
+      <!-- Верхняя надпись УДАЛЕНА -->
+      
+      <!-- Нередактируемое текстовое поле с ключом -->
+      <input 
+        type="text" 
+        class="key-field" 
+        value="CTIISBRAINROTAISLOP" 
+        readonly 
+        disabled
+        autocomplete="off"
+        spellcheck="false"
+      >
+      
+      <!-- Срок действия -->
+      <span class="sub">Key expires — Lifetime</span>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const canvas = document.getElementById('snow-canvas');
+      const ctx = canvas.getContext('2d');
+
+      let width, height;
+      let snowflakes = [];
+      const MAX_FLAKES = 260;
+      const WIND = 0.08;
+
+      function resizeCanvas() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        generateSnowflakes();
+      }
+
+      function generateSnowflakes() {
+        const count = Math.min(MAX_FLAKES, Math.floor((width * height) / 2800) + 40);
+        snowflakes = [];
+        for (let i = 0; i < count; i++) {
+          snowflakes.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            radius: Math.random() * 3.5 + 1.2,
+            speed: Math.random() * 0.8 + 0.3,
+            opacity: Math.random() * 0.5 + 0.4,
+            wobble: Math.random() * 0.6 + 0.2,
+            phase: Math.random() * Math.PI * 2,
+          });
+        }
+      }
+
+      function drawSnow() {
+        ctx.clearRect(0, 0, width, height);
+        for (let s of snowflakes) {
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 255, 255, ${s.opacity})`;
+          ctx.shadowColor = 'rgba(255, 255, 255, 0.15)';
+          ctx.shadowBlur = 8;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+      }
+
+      function updateSnow() {
+        for (let s of snowflakes) {
+          s.y += s.speed * 0.7 + 0.15;
+          s.phase += 0.02;
+          const drift = Math.sin(s.phase) * s.wobble * 0.6;
+          s.x += drift + WIND * 0.3;
+
+          if (s.y > height + 20) {
+            s.y = -10 - Math.random() * 20;
+            s.x = Math.random() * width;
+            s.radius = Math.random() * 3.5 + 1.2;
+            s.opacity = Math.random() * 0.5 + 0.4;
+            s.speed = Math.random() * 0.8 + 0.3;
+            s.wobble = Math.random() * 0.6 + 0.2;
+          }
+          if (s.x < -30) s.x = width + 20;
+          if (s.x > width + 30) s.x = -20;
+        }
+      }
+
+      function animate() {
+        updateSnow();
+        drawSnow();
+        requestAnimationFrame(animate);
+      }
+
+      let resizeTimeout;
+      function handleResize() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          resizeCanvas();
+        }, 100);
+      }
+
+      window.addEventListener('resize', handleResize);
+      resizeCanvas();
+      animate();
+    })();
+  </script>
+</body>
+</html>
